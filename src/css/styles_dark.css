@@ -1,0 +1,127 @@
+html, body, div {
+    height: 100%;
+    width: 100%;
+    font-family: Calibri;
+    overflow: hidden;
+    background-color: black
+  }
+  
+  #title{
+    font-size: 25px;
+    color: white;
+  }
+  
+  #fullPage {
+    display: flex;
+    flex-flow: column wrap;
+  }
+  
+  #titlePane {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 0%;
+    background-color: black;
+  }
+  
+  #visContainerPane {
+    display: flex;
+    flex-flow: column wrap;
+    height: 99%;
+  }
+  
+  #controlPanel {
+    /* display: flex;
+    flex-flow: column; */
+    margin-top: 3%;
+    margin-left: 1%;
+    width: 10%;
+    height: 100%
+  }
+  
+  #visPane {
+    display: flex;
+    flex-flow: row wrap;
+    width: 80%;
+    height: 100%;
+  }
+  
+  svg {
+    user-select: none;
+  }
+  
+  .codon {
+    /* stroke: none; */
+    /* fill-opacity: 0.25; */
+  }
+  
+  .codonText {
+    font: 15px Calibri;	
+    alignment-baseline: middle;
+    text-anchor: middle;
+  }
+  
+  .mouseOver {
+      cursor: pointer;
+    /* fill: transparent; */
+    /* stroke: #bbb;
+    stroke-width: 2; */
+  }
+  
+  .selected_donut_arc {
+    fill: #bbb;
+  }
+  
+  /* .magnifiedCodon.bbox {
+    fill: transparent;
+    stroke: lightgrey;
+  }
+  
+  .magnifiedCodon.text {
+    font: 15px Calibri;	
+    alignment-baseline: middle;
+  }
+  
+  .magnifiedCodon.rect {
+    stroke: none;
+  }
+  
+  .magnifiedCodon.connector {
+    stroke: gray;
+    fill: none;
+  } */
+  
+  .text_ORF {
+    font-size: 40px; /* 40 */
+  }
+  
+  .text_Protein {
+    font-size: 40px; /* 40 */
+  }
+  
+  .selected_text_ORF {
+    fill: black;
+    font-size: 48px;
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  .selected_text_Protein {
+    fill: black;
+    font-size: 48px;
+    font-weight: bold;
+    font-style: italic;
+  }
+  
+  .mouseOverArcLabel {
+    fill: black;
+  }
+  
+  .edge {
+    fill: none;
+    stroke-weight: 1px;
+    /* stroke: #fc8d62;
+    stroke-opacity: 0.3; */
+  }

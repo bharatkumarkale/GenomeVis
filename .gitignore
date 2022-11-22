@@ -14,7 +14,6 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -127,3 +126,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# datasets
+categorical_variants_viz_json/
+test/
+test.html
+index0_position_attention.json
+index1_position_attention.json
+index2_position_attention.json
+index3_position_attention.json

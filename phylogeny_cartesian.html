@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+text {
+  font: 3px Avenir;
+}
+
+.legendLabel {
+  font: 18px Avenir;
+}
+
+.link {
+  fill: none;
+  stroke: #aaa;
+  stroke-opacity: 0.4;
+  stroke-width: 1px;
+}
+
+</style>
+<body>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+
+const variants = {'B.1.1.7': 'Alpha', 
+                  'B.1.351': 'Beta', 
+                  'P.1': 'Gamma', 
+                  'B.1.617.2': 'Delta', 
+                  'AY.#': 'Delta', 
+                  'B.1.427': 'Epsilon', 
+                  'B.1.429': 'Epsilon', 
+                  'omicron': 'Omicron', 
+                  'B.1.1.529': 'Omicron', 
+                  'BA.1': 'Omicron', 
+                  'BA.1.1': 'Omicron', 
+                  'BA.2': 'Omicron', 
+                  'BA.3': 'Omicron', 
+                  'BA.4': 'Omicron', 
+                  'BA.5': 'Omicron', 
+                  'R.1': 'Other', 
+                  'P.2': 'Other'}
+
+let labels = {},
+    width = 1680,
+    height = 900,
+    padding = 20;
+
+let svg = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height),
+target_g = svg.append("g")
+            .attr("transform", "translate(" + 0 + "," + 0 + ")"),
+legend_g = svg.append("g")
+            .attr("transform", `translate(${width-250},${0.6*height})`);
+
+let tree = d3.tree()
+                .size([width-50, height-50]);
+    color = d3.scaleOrdinal()
+                .domain(["Alpha", "Gamma", 'Delta', 'Epsilon', 'Omicron', 'Original strain', 'Other', 'Not annotated'])
+                .range(["#377eb8", "#e41a1c", "#33a02c", "#ffff33", "#ff7f00", "#f781bf", "#aaaaaa", "#555555"]);
+
+Promise.all([d3.csv("./data/1K_labels.csv", {credentials: 'same-origin'}), 
+             d3.text("./data/usher_tree_1000.tree", {credentials: 'same-origin'})])
+    .then(files => {
+        files[0].forEach(r => labels[r['MCoV-10130']] = r['B.1.325']);
+        let rawData = files[1],
+            data = parseNewick(rawData);
+
+        let root = d3.hierarchy(data);
+        root = tree(root);
+
+        setColor(root);
+
+        target_g.append("g")
+                .attr("fill", "none")
+                .attr("stroke", "#ccc")
+            .selectAll("path")
+            .data(root.descendants().slice(1))
+            .join("path")
+                .attr("d", diagonal)
+                .attr("stroke", d => d.color);
+
+        // target_g.append("g")
+        //     .selectAll("text")
+        //     .data(root1.leaves())
+        //     .join("text")
+        //         .attr("dy", ".31em")
+        //         .attr("transform", d => `rotate(${d.x - 90}) translate(${radius-20 + 2},0)${d.x < 180 ? "" : " rotate(180)"}`)
+        //         .attr("text-anchor", d => d.x < 180 ? "start" : "end")
+        //         .attr("fill", d => d.color)
+        //         .text(d => d.data.name.replace(/_/g, " "));
+
+        showLegend();
+    })
+
+// Set the color of each node by recursively inheriting.
+function setColor(d) {
+    let name = d.data.name, 
+        colors = color.domain();
+    for (let i = 0; i < colors.length; i++) {
+        d.color = '#dddddd';
+        if (Object.keys(labels).includes(name)){
+            if (Object.keys(variants).includes(labels[name])) {
+                d.color = color(variants[labels[name]]);
+            } else if(labels[name].slice(0,3) == "AY."){
+                d.color = color(variants['AY.#']);
+            } else if(labels[name].slice(0,3) == "B.1") {
+                d.color = color('Other')
+            } else if(labels[name] == "original_strain") {
+                d.color = color('Original strain')
+            } else {
+                d.color = color('Not annotated')
+            }
+        }
+    }
+
+    // console.log(name, labels[name], d.color);
+    if (d.children) d.children.forEach(setColor);
+}
+
+function diagonal(d) {
+    return "M" + d.x + "," + d.y
+        + "C" + d.x + "," + (d.y + d.parent.y)/2
+        + " " + d.parent.x + "," + (d.y + d.parent.y)/2
+        + " " + d.parent.x + "," + d.parent.y;
+}
+
+function showLegend() {
+    const g = legend_g.selectAll("g")
+                .data(color.domain())
+                .join("g")
+                    .attr("transform", (d, i) => `translate(${Math.floor(i/5)*110},${10+(i%5) * 20})`);
+
+    g.append("rect")
+        .attr("width", 18)
+        .attr("height", 18)
+        .attr("fill", color);
+
+    g.append("text")
+        .attr("class", "legendLabel")
+        .attr("x", 24)
+        .attr("y", 9)
+        .attr("dy", "0.35em")
+        .text(d => d);
+}
+
+// https://github.com/jasondavies/newick.js
+function parseNewick(a){
+    for(var e=[],r={},s=a.split(/\s*(;|\(|\)|,|:)\s*/),t=0;t<s.length;t++){
+        var n=s[t];
+        switch(n){
+            case"(":
+                var c={};
+                r.children=[c],e.push(r),r=c;
+                break;
+            case",":
+                var c={};
+                e[e.length-1].children.push(c),r=c;
+                break;
+            case")":
+                r=e.pop();
+                break;
+            case":":
+                break;
+            default:
+                var h=s[t-1];
+                ")"==h||"("==h||"," == h ? r.name=n : ":"==h&&(r.length=parseFloat(n))    
+        }
+    }
+    return r;
+}
+
+</script>
