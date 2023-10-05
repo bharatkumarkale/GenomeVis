@@ -6,13 +6,13 @@ var App = App || {};
 	App.views = {};
 	App.targetID = '#visPane';
 
-	App.init = function() {
-		App.models.data = new DataModel();
+	App.init = function(fielID) {
+		App.models.data = new DataModel(fielID);
 		App.views.genomeView = new GenomeView(App.targetID)
 
 		App.models.data.loadData()
 			.then(() => {
-				App.views.genomeView.setExportFileName(`index${App.models.data.getDataFileIndex()}_genomeView`)
+				App.views.genomeView.setExportFileName(`index${fielID}_genomeView`)
 									.data(App.models.data.getData())
 									.draw();
 			})

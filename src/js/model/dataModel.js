@@ -2,12 +2,12 @@
 
 var App = App || {};
 
-let DataModel = function() {
+let DataModel = function(fielIndex) {
     let self = {
         data: null,
         ORFs: null,
         proteins: null,
-        dataFileIndex: 7
+        dataFileIndex: fielIndex
     };
 
     function loadData() {
