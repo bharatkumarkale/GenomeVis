@@ -128,7 +128,7 @@ dmypy.json
 .pyre/
 
 # datasets
-categorical_variants_viz_json/
+# categorical_variants_viz_json/
 test/
 test.html
 index0_position_attention.json
