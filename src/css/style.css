@@ -45,7 +45,7 @@ html, body, div {
   display: flex;
   flex-flow: row wrap;
   width: 80%;
-  height: 100%;
+  height: 80%;
 }
 
 svg {
@@ -124,4 +124,22 @@ svg {
   stroke-weight: 1px;
   /* stroke: #fc8d62;
   stroke-opacity: 0.3; */
+}
+
+.legendTitle {
+  text-anchor: start;
+	alignment-baseline: middle;
+	font-family: Arial;
+	font-size: small;
+}
+
+.legendRect {
+  stroke: #bbb;
+  stroke-width: 1;
+}
+
+.legendTick {
+  alignment-baseline: hanging;
+  text-anchor: middle;
+	font-size: smaller;
 }

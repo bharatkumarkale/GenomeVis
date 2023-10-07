@@ -260,7 +260,7 @@ let GenomeView = function(targetID) {
 									// .setEdgeColorScale(bundleLayer_colorScale)
 									.setEdgeWeightAttr('value');
 		self.bundleLayer.draw();
-		
+		showLegend();
 	}
 
 	function updatelayers(highlightGroup, highlightGroupName) {
@@ -370,6 +370,55 @@ let GenomeView = function(targetID) {
 	function resetView() {
 		self.attributeData_filtered = [];
 		updatelayers("", "")	
+	}
+
+	function showLegend() {
+		var colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0,1]),
+			w = self.targetSvg.node().getBoundingClientRect().width,
+			h = self.targetSvg.node().getBoundingClientRect().height,
+			legRectHeight = 20,
+			legRectWidth = 0.15*w;
+
+		var gradient = self.targetSvg.append("defs")
+							.append("linearGradient")
+							.attr("id", 'linear_gradient_1')
+							.attr("x1", "0%")
+							.attr("y1", "0%")
+							.attr("x2", "100%")
+							.attr("y2", "0%")
+
+		gradient.selectAll('stop')
+			.data(colorScale.range())
+			.enter()
+				.append('stop')
+				.style('stop-color', d=>d)
+				.attr('offset', function (d,i) {
+					return 100 * (i/(colorScale.range().length-1)) + '%';
+				})
+
+		self.targetSvg.append('text')
+			.attr('class', 'legendTitle')
+			.attr('x', 0.7*w)
+			.attr('y', 0.05*h)
+			.text('Token (Codon) Likelihood')
+
+		self.targetSvg.append('rect')
+			.attr('class', 'legendRect')
+			.attr('x', 0.7*w+10)
+			.attr('y', 0.05*h+10)
+			.attr('width', legRectWidth)
+			.attr('height', legRectHeight)
+			.style('fill', 'url(#linear_gradient_1)')
+		
+		self.targetSvg.selectAll('.legendTick')
+			.data([0,1])
+			.enter()
+				.append('text')
+				.attr('class', 'legendTick')
+				.attr('x', (d,i) => (i*legRectWidth)+(0.7*w+10))
+				.attr('y',0.05*h+10+legRectHeight+2)
+				.text(d => d)
+
 	}
 
 	function saveClicked(event, d) {
