@@ -398,13 +398,13 @@ let GenomeView = function(targetID) {
 
 		self.targetSvg.append('text')
 			.attr('class', 'legendTitle')
-			.attr('x', 0.7*w)
+			.attr('x', 0.75*w)
 			.attr('y', 0.05*h)
 			.text('Token (Codon) Likelihood')
 
 		self.targetSvg.append('rect')
 			.attr('class', 'legendRect')
-			.attr('x', 0.7*w+10)
+			.attr('x', 0.75*w+10)
 			.attr('y', 0.05*h+10)
 			.attr('width', legRectWidth)
 			.attr('height', legRectHeight)
@@ -415,9 +415,23 @@ let GenomeView = function(targetID) {
 			.enter()
 				.append('text')
 				.attr('class', 'legendTick')
-				.attr('x', (d,i) => (i*legRectWidth)+(0.7*w+10))
+				.attr('x', (d,i) => (i*legRectWidth)+(0.75*w+10))
 				.attr('y',0.05*h+10+legRectHeight+2)
 				.text(d => d)
+
+		self.targetSvg.append('rect')
+			.attr('class', 'legendRect')
+			.attr('x', 0.75*w)
+			.attr('y', 0.15*h)
+			.attr('width', 15)
+			.attr('height', 15)
+			.style('fill', '#fc8d62')
+
+		self.targetSvg.append('text')
+			.attr('class', 'legendTitle')
+			.attr('x', 0.75*w+18)
+			.attr('y', 0.15*h+9)
+			.text('Cross-Protein Attention')
 
 	}
 
